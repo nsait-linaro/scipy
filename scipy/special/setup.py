@@ -61,7 +61,7 @@ def configuration(parent_package='',top_path=None):
                          f2py_options=['--no-wrap-functions'],
                          depends=specfun_src,
                          define_macros=[],
-                         libraries=['sc_specfun'])
+                         libraries=['sc_specfun', 'pgmath'])
 
     # Extension _ufuncs
     headers = ['*.h', join('cephes', '*.h')]
@@ -127,7 +127,7 @@ def configuration(parent_package='',top_path=None):
     cfg = combine_dict(lapack_opt,
                        include_dirs=[curdir] + inc_dirs + [numpy.get_include()],
                        libraries=['sc_amos', 'sc_cephes', 'sc_mach',
-                                  'sc_cdf', 'sc_specfun'],
+                                  'sc_cdf', 'sc_specfun', 'pgmath'],
                        define_macros=define_macros)
     cython_special = config.add_extension('cython_special',
                                           depends=cython_special_dep,

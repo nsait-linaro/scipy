@@ -84,7 +84,7 @@ def configuration(parent_package='',top_path=None):
     # dop
     ext = config.add_extension('_dop',
                                sources=['dop.pyf'],
-                               libraries=['dop'],
+                               libraries=['dop', 'pgmath'],
                                depends=dop_src,
                                f2py_options=f2py_options)
     ext._pre_build_hook = pre_build_hook

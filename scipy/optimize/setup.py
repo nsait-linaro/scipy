@@ -22,7 +22,7 @@ def configuration(parent_package='', top_path=None):
     config.add_library('minpack', sources=minpack_src)
     config.add_extension('_minpack',
                          sources=['_minpackmodule.c'],
-                         libraries=['minpack'],
+                         libraries=['minpack', 'pgmath'],
                          depends=(["minpack.h", "__minpack.h"] + minpack_src),
                          include_dirs=include_dirs,
                          **numpy_nodepr_api)

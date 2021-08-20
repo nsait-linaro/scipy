@@ -40,7 +40,7 @@ def configuration(parent_package='',top_path=None):
 
     config.add_extension('_fitpack',
                          sources=['src/_fitpackmodule.c'],
-                         libraries=['fitpack'],
+                         libraries=['fitpack', 'pgmath'],
                          define_macros=define_macros + numpy_nodepr_api['define_macros'],
                          depends=(['src/__fitpack.h']
                                   + fitpack_src)
@@ -48,7 +48,7 @@ def configuration(parent_package='',top_path=None):
 
     config.add_extension('dfitpack',
                          sources=['src/fitpack.pyf'],
-                         libraries=['fitpack'],
+                         libraries=['fitpack', 'pgmath'],
                          define_macros=define_macros,
                          depends=fitpack_src,
                          f2py_options=f2py_options

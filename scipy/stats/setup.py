@@ -12,11 +12,12 @@ def pre_build_hook(build_ext, ext):
 
 
 def configuration(parent_package='', top_path=None):
+    print("**** Configuration")
     from numpy.distutils.misc_util import Configuration
     from scipy._build_utils.compiler_helper import set_cxx_flags_hook
     import numpy as np
     config = Configuration('stats', parent_package, top_path)
-
+    print("*** Config = ", config)
     config.add_data_dir('tests')
 
     statlib_src = [join('statlib', '*.f')]
@@ -26,16 +27,17 @@ def configuration(parent_package='', top_path=None):
     config.add_extension('statlib',
                          sources=['statlib.pyf'],
                          f2py_options=['--no-wrap-functions'],
-                         libraries=['statlib'],
+                         libraries=['statlib', 'pgmath'],
                          depends=statlib_src)
 
     # add _stats module
     config.add_extension('_stats',
-                         sources=['_stats.c'])
+                         sources=['_stats.c'],
+                         libraries=['pgmath'])
 
     # add mvn module
     config.add_extension('mvn',
-                         sources=['mvn.pyf', 'mvndst.f'])
+                         sources=['mvn.pyf', 'mvndst.f'], libraries=['pgmath'])
 
     # add _sobol module
     config.add_extension('_sobol',
