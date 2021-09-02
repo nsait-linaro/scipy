@@ -34,6 +34,47 @@ C
 *                              optimizer                               *
 ************************************************************************
 
+      function isnan(x)
+            real*8 x, ex
+            integer*4 iz(2), ix, iy, iexp, imant
+            equivalence(ex,iz)
+            ex = x
+            ix = iz(2)
+            iy = iz(1)
+            iexp = ishft(ix,-20)
+            iexp = iand(iexp,z'7ff')
+
+            if (iexp .eq. 0) then
+                  if ((ix .eq. 0) .and. (iy .eq. 0)) then
+                        isnan = .false.
+                  else if (iand(ix,z'80000000').eq.0) then
+                        isnan = .false.
+                  else
+                        isnan = .false.
+                  endif
+            else  if (iexp .lt. 2047) then
+                  if (iand(ix,z'80000000').eq.0) then
+                        isnan = .false.
+                  else
+                        isnan = .false.
+                  endif
+            else
+                  imant = ior(iand(ix,z'fffff'),iy)
+                  if (imant .eq. 0) then
+                        if (iand(ix,z'80000000').eq.0) then
+                              isnan = .false.
+                        else
+                              isnan = .false.
+                        endif
+                  else if (iand(ix,z'80000') .ne. 0) then
+                        isnan = .true.
+                  else
+                        isnan = .true.
+                  end if
+            end if
+            return
+      end function
+
       SUBROUTINE slsqp (m, meq, la, n, x, xl, xu, f, c, g, a,
      *                  acc, iter, mode, w, l_w, jw, l_jw,
      *                  alpha, f0, gs, h1, h2, h3, h4, t, t0, tol,
@@ -742,7 +783,7 @@ C  NaN value indicates no bound
       nancnt = 0
 
       DO 40 i=1,n
-         if (xl(i).eq.xl(i)) then
+         if ((isnan(xl(i))).eqv. .FALSE.) then
             w(il) = xl(i)
             do 41 j=1,n
                w(ip + m1*(j-1)) = 0
@@ -756,7 +797,7 @@ C  NaN value indicates no bound
    40 CONTINUE
 
       DO 50 i=1,n
-         if (xu(i).eq.xu(i)) then
+         if ((isnan(xu(i))).eqv. .FALSE.) then
             w(il) = -xu(i)
             do 51 j=1,n
                w(ip + m1*(j-1)) = 0
@@ -2176,11 +2217,12 @@ C        CLEAN-UP LOOP
       subroutine bound(n, x, xl, xu)
       integer n, i
       double precision x(n), xl(n), xu(n)
+      
       do i = 1, n
 C        Note that xl(i) and xu(i) may be NaN to indicate no bound
-         if(xl(i).eq.xl(i).and.x(i) < xl(i))then
+         if((isnan(xl(i)).eqv. .FALSE.).and.x(i) < xl(i))then
             x(i) = xl(i)
-         else if(xu(i).eq.xu(i).and.x(i) > xu(i))then
+         else if(((isnan(xu(i)).eqv. .FALSE.)).and.x(i) > xu(i))then
             x(i) = xu(i)
          end if
       end do
