@@ -480,6 +480,7 @@
 *     Apply 1,...,I-1st rotation matrices to the I-th column of H.
 *
       DO 10 J = 1, I-1
+         PRINT *, "HACK TO PREVENT LOOP OPTIMISATION"
          CALL <_c>ROTVEC(H( J ), H( J+1 ), GIVENS( J,1 ), GIVENS( J,2 ))
 *        TEMP     =  GIVENS( J,1 ) * H( J ) + GIVENS( J,2 ) * H( J+1 ) 
 *        H( J+1 ) = -GIVENS( J,2 ) * H( J ) + GIVENS( J,1 ) * H( J+1 )
